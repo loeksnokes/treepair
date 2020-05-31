@@ -9,7 +9,7 @@ import (
 )
 
 /*
-TreePair An interface built specifically for the type treePair.
+TreePair: An interface built specifically for the type treePair.
 
 treePair::
 
@@ -27,11 +27,12 @@ Can:
    modifies range tree so the initial prefix map is unchanged.
 4) Minimise and Minimize (same function but for British English or American English.)
 5) Multiply tree pairs based off of same alphabet.
-6) detect if the element is in F, T, or V.
-7) initialise (trivial permutation elt) from a list of expansions in D/R
-8) initialise from DFS notation representation string: e.g. "{11000,10100,1 2 0}"" (an elt of T)
-9) initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
-10) return domain/range permutations (natural permutation from prefix code in
+6) Invert an element.
+6) Detect if the element is in F, T, or V.
+7) Initialise (trivial permutation elt) from a list of expansions in D/R
+8) Initialise from DFS notation representation string: e.g. "{11000,10100,1 2 0}"" (an elt of T)
+9) Initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
+10) Return domain/range permutations (natural permutation from prefix code in
 	dictionary order to the numeric labels of leaves)
 
 */
