@@ -35,7 +35,10 @@ func Test(t *testing.T) {
 	// from domain and range lists of expansion points.
 	t.Run("MakeByExpansion test", func(t *testing.T) {
 		// makes permutation 0 1 2 3 ... 7
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in MakeByExpansion test.")
+		}
 		tp.ExpandDomainAt("01")
 		tp.ExpandRangeAt("10")
 		got := tp.FullString()
@@ -50,7 +53,11 @@ func Test(t *testing.T) {
 	// Depth First Search description of trees.
 	t.Run("MakeByDFSString test", func(t *testing.T) {
 		//makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in MakeByDFSString test.")
+		}
+
 		EncodeDFS(tp, "{1111000011000,1110100010100,0 1 2 3 4 5 6}")
 		got := tp.FullString()
 		want := "{D: [0000 0], [0001 1], [001 2], [01 3], [100 4], [101 5], [11 6] || R: [000 0], [0010 1], [0011 2], [01 3], [10 4], [110 5], [111 6]}"
@@ -65,7 +72,11 @@ func Test(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
 		//fmt.Println("Entered Third Test (minimise)")
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in Minimise test.")
+		}
+
 		got := ""
 		want := ""
 		if !EncodeDFS(tp, "{111000100,111100000,0 1 2 3 4}") {
@@ -86,7 +97,11 @@ func Test(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
 		//fmt.Println("Entered Third Test (minimise)")
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in Minimize test.")
+		}
+
 		got := ""
 		want := ""
 		if !EncodeDFS(tp, "{111000100,111100000,0 1 2 3 4}") {
@@ -104,7 +119,11 @@ func Test(t *testing.T) {
 
 	// Permutation applies permutation at range.
 	t.Run("Permute range test", func(t *testing.T) {
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in PermuteRange test.")
+		}
+
 		EncodeDFS(tp, "{110011000,101010100,0 1 2 3 4}")
 		permutation := map[int]int{
 			0: 1,
@@ -121,7 +140,11 @@ func Test(t *testing.T) {
 
 	// PermuteRange applies permutation at domain.
 	t.Run("Permute domain test", func(t *testing.T) {
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in PermuteDomain test.")
+		}
+
 		EncodeDFS(tp, "{110011000,101010100,0 1 2 3 4}")
 		permutation := map[int]int{
 			0: 1,
@@ -138,7 +161,11 @@ func Test(t *testing.T) {
 
 	// PermuteLabels applies permutation at domain and range.
 	t.Run("Permute Labels test", func(t *testing.T) {
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in Permute Labels test.")
+		}
+
 		EncodeDFS(tp, "{110011000,101010100,0 1 2 3 4}")
 		permutation := map[int]int{
 			0: 1,
@@ -157,7 +184,11 @@ func Test(t *testing.T) {
 	// relabels range to maintain the actual element.
 	t.Run("ResetLabels test", func(t *testing.T) {
 
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in ResetLables test.")
+		}
+
 		EncodeDFS(tp, "{110011000,101010100,0 1 2 3 4}")
 		permutation := map[int]int{
 			0: 1,
@@ -175,7 +206,10 @@ func Test(t *testing.T) {
 
 	// Inverse swaps the tree pairs.  It does not reset labels afterward.
 	t.Run("Inverse test", func(t *testing.T) {
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in Inverse test.")
+		}
 		EncodeDFS(tp, "{110011000,101010100,0 1 2 3 4}")
 		permutation := map[int]int{
 			0: 1,
@@ -197,8 +231,15 @@ func Test(t *testing.T) {
 	t.Run("Multiply test", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		dTP := NewTreePairAlpha("01")
-		rTP := NewTreePairAlpha("01")
+		dTP, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in domaintp constructor in Multiply test.")
+		}
+
+		rTP, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in rangetp constructor in Multiply test.")
+		}
 
 		EncodeDFS(dTP, "{11110000111010000,11101000110100100,0 1 2 5 4 3 6 8 7}")
 		EncodeDFS(rTP, "{11001101000,11101000100,5 1 2 4 0 3}")
@@ -214,7 +255,10 @@ func Test(t *testing.T) {
 	t.Run("InF false", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in InF false test.")
+		}
 		EncodeDFS(tp, "{1110000,1010100,0 2 1 3}")
 		got := strconv.FormatBool(tp.InF())
 		want := strconv.FormatBool(false)
@@ -226,7 +270,11 @@ func Test(t *testing.T) {
 	t.Run("InF true", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in InF true test.")
+		}
+
 		EncodeDFS(tp, "{1110000,1010100,0 1 2 3}")
 		tp.PermuteLabels(map[int]int{0: 1, 1: 2, 2: 3, 3: 0})
 		got := strconv.FormatBool(tp.InF())
@@ -238,7 +286,11 @@ func Test(t *testing.T) {
 	t.Run("InT false", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in InT false test.")
+		}
+
 		EncodeDFS(tp, "{1110000,1010100,0 1 2 3}")
 		tp.ApplyPermRange(map[int]int{0: 1, 1: 3, 2: 2, 3: 0})
 		got := strconv.FormatBool(tp.InT())
@@ -250,7 +302,11 @@ func Test(t *testing.T) {
 	t.Run("InT true", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in InT true test.")
+		}
+
 		EncodeDFS(tp, "{1110000,1010100,0 1 2 3}")
 		tp.ApplyPermRange(map[int]int{0: 1, 1: 2, 2: 3, 3: 0})
 		got := strconv.FormatBool(tp.InT())
@@ -264,7 +320,11 @@ func Test(t *testing.T) {
 	t.Run("InT true tough", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in InT true tough test.")
+		}
+
 		EncodeDFS(tp, "{1110000,1010100,0 1 2 3}")
 		tp.ApplyPermRange(map[int]int{0: 1, 1: 2, 2: 3, 3: 0})
 		tp.PermuteLabels(map[int]int{0: 1, 1: 3, 2: 2, 3: 0})
@@ -273,12 +333,15 @@ func Test(t *testing.T) {
 		assertCorrectMessage(t, got, want)
 	})
 
-	// InV true checks we can verify that an elt is in T.
+	// InV true checks we can verify that an elt is in V.
 	// since currently everything is, there is not much to do.
 	t.Run("InV true", func(t *testing.T) {
 		//reduces element to minimal tree pair.
 		// makes permutation 1 2 3 ... 8
-		tp := NewTreePairAlpha("01")
+		tp, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in InV test.")
+		}
 		EncodeDFS(tp, "{1110000,1010100,0 1 2 3}")
 		tp.ApplyPermRange(map[int]int{0: 1, 1: 3, 2: 2, 3: 0})
 		got := strconv.FormatBool(tp.InV())

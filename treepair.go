@@ -9,9 +9,9 @@ import (
 )
 
 /*
-TreePair: An interface built specifically for the type treePair.
+TreePair An interface built specifically for the type treePair.
 
-treePair::
+TreePair::
 
 Has:
 Two prefix codes with the same base alphabet and same cardinality.  One
@@ -28,11 +28,11 @@ Can:
 4) Minimise and Minimize (same function but for British English or American English.)
 5) Multiply tree pairs based off of same alphabet.
 6) Invert an element.
-6) Detect if the element is in F, T, or V.
-7) Initialise (trivial permutation elt) from a list of expansions in D/R
-8) Initialise from DFS notation representation string: e.g. "{11000,10100,1 2 0}"" (an elt of T)
-9) Initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
-10) Return domain/range permutations (natural permutation from prefix code in
+7) Detect if the element is in F, T, or V.
+8) Initialise (trivial permutation elt) from a list of expansions in D/R
+9) Initialise from DFS notation representation string: e.g. "{11000,10100,1 2 0}"" (an elt of T)
+10) Initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
+11) Return domain/range permutations (natural permutation from prefix code in
 	dictionary order to the numeric labels of leaves)
 
 */
@@ -61,7 +61,6 @@ type TreePair interface {
 	SwapPermAtRangeKeys(a, b string) bool
 	SwapPermAtDomainKeys(a, b string) bool
 	// DFSString() string
-	// Multiply(first, second TreePair) TreePair  -- Not in interface -- Can Multiply TreePairs.
 }
 
 type treePair struct {
@@ -71,13 +70,23 @@ type treePair struct {
 }
 
 // NewTreePairAlpha returns a prefixCode as a PrefCode and sets alphabet of runes by input string.
-func NewTreePairAlpha(alphaStr string) TreePair {
-	dpc := prefcode.NewPrefCodeAlphaString(alphaStr)
-	rpc := prefcode.NewPrefCodeAlphaString(alphaStr)
+func NewTreePairAlpha(alphaStr string) (TreePair, error) {
+	dpc, errd := prefcode.NewPrefCodeAlphaString(alphaStr)
+	rpc, errr := prefcode.NewPrefCodeAlphaString(alphaStr)
+	if nil != errd {
+		outStr := "NewTreePairAlpha(): Failed to create domaintree from " + alphaStr
+		fmt.Println(outStr)
+		return nil, errd
+	}
+	if nil != errr {
+		outStr := "NewTreePairAlpha(): Failed to create rangetree from " + alphaStr
+		fmt.Println(outStr)
+		return nil, errr
+	}
 	var tp = treePair{alphabet: prefcode.StringToRuneSlice(alphaStr),
 		dom: dpc,
 		ran: rpc}
-	return &tp
+	return &tp, nil
 }
 
 // EncodeDFS returns a treepair from an alphabet string (like "01") and a DFS string like
@@ -391,7 +400,10 @@ func Multiply(first, second TreePair) TreePair {
 	second.ResetLabels()
 
 	// Make a prefix code that is join of range of first element and domain of second element
-	fullCode := first.CodeRange().Join(second.CodeRange())
+	fullCode, err := first.CodeRange().Join(second.CodeRange())
+	if nil != err {
+		panic("Multiply(): err return for join")
+	}
 
 	// Get the exposed carets we can use to expand our two elements.
 	exposed := fullCode.ExposedCarets()
