@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Loeksnokes/prefcode"
+	"github.com/loeksnokes/prefcode"
 )
 
 /*
