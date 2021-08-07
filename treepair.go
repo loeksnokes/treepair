@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
 	"github.com/Loeksnokes/prefcode"
 )
 
@@ -298,10 +297,10 @@ func (tp *treePair) InT() bool {
 func (tp *treePair) InV() bool { return true }
 
 // ReduceDomainAt takes as input the root of a claimed exposed caret and reduces domain and
-// range of both trees at correpsonding carets IF the permutation labels are identical
+// range of both trees at corresponding carets IF the permutation labels are identical
 // across the leaves of those carets.
 // **In all cases has a side effect of resetting labels (even if no reduction is possible).**
-// true if reduction occured, false if it was not possible.
+// true if reduction occurred, false if it was not possible.
 func (tp treePair) ReduceDomainAt(s string) bool {
 	tp.ResetLabels()
 
