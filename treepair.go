@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	
+
 	"github.com/Loeksnokes/prefcode"
 )
 
