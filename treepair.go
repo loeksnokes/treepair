@@ -397,15 +397,9 @@ func Multiply(first, second TreePair) *treePair {
 	fmt.Println("second: " + second.FullString())
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-	fmt.Println("Resetting labels:")
 	//build steady labelling
 	first.ResetLabels()
 	second.ResetLabels()
-	fmt.Println("first: " + first.FullString())
-	fmt.Println("second: " + second.FullString())
-
-	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 
 	// Make a prefix code that is join of range of first element and domain of second element
 	fmt.Println("First Range: " + first.CodeRange().String())
