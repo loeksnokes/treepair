@@ -404,7 +404,12 @@ func Multiply(first, second TreePair) *treePair {
 	fmt.Println("first: " + first.FullString())
 	fmt.Println("second: " + second.FullString())
 
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+
 	// Make a prefix code that is join of range of first element and domain of second element
+	fmt.Println("First Range: " + first.CodeRange().String())
+	fmt.Println("Second Domain: " + second.CodeDomain().String())
 	fullCode, err := first.CodeRange().Join(second.CodeDomain())
 	if nil != err {
 		panic("Multiply(): err return for join")
