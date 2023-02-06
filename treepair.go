@@ -391,7 +391,10 @@ func (tp treePair) ExpandRangeAt(s string) {
 }
 
 // Multiply returns a new TreePair that is the product of the two that are fed in.
-func Multiply(first, second TreePair) *treePair {
+func Multiply(nonLocalFirst, nonLocalSecond TreePair) *treePair {
+
+	first := treePair{alphabet: nonLocalFirst.Alphabet(), dom: nonLocalFirst.CodeDomain(), ran: nonLocalFirst.CodeRange()}
+	second := treePair{alphabet: nonLocalSecond.Alphabet(), dom: nonLocalSecond.CodeDomain(), ran: nonLocalSecond.CodeRange()}
 
 	fmt.Println("first: " + first.FullString())
 	fmt.Println("second: " + second.FullString())
@@ -411,14 +414,27 @@ func Multiply(first, second TreePair) *treePair {
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("Join D-R code: " + fullCode.String())
-	// Get the exposed carets we can use to expand our two elements.
-	exposed := fullCode.ExposedCarets()
 
-	// Expand first and second so range of first = domain of second = join we found.
-	for _, v := range exposed {
-		first.ExpandRangeAt(v)
-		second.ExpandDomainAt(v)
+	//for each leaf of the join tree, force it to be a leaf in range first/domain second
+	for key, _ := range fullCode.Code() {
+		first.ExpandRangeAt(key)
+		second.ExpandDomainAt(key)
 	}
+
+	/*
+		// This commented out code tries to be efficient by only adding the exposed carets but it
+		// does not seem to wrok properly.
+		// Get the exposed carets we can use to expand our two elements.
+
+
+			exposed := fullCode.ExposedCarets()
+
+			// Expand first and second so range of first = domain of second = join we found.
+			for _, v := range exposed {
+				first.ExpandRangeAt(v)
+				second.ExpandDomainAt(v)
+			}*/
+
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("Expanded treepairs")

@@ -1,9 +1,9 @@
 module github.com/loeksnokes/treepair
 
-go 1.17
+go 1.19
 
 require (
-	github.com/loeksnokes/prefcode v0.0.0-20210807211540-bf7ea049e39c
+	github.com/loeksnokes/prefcode v0.0.0-20230206093912-f7f6101b1b12
 	github.com/stretchr/testify v1.8.1
 )
 
