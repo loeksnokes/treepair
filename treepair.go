@@ -20,21 +20,20 @@ as the PrefixCode interface inherently assocites a bijection from the code to a 
 {0, 1, ..., k-1} while the words in the prefix code have a natural order.
 
 Can:
-1) Expand both trees at corresponding location in domain or range.
-2) Permute domain or range permutation
-3) ResetLabels sets the
-   domain tree labels as 0 1 ... k-1 corresponding to its dictionary order and
-   modifies range tree so the initial prefix map is unchanged.
-4) Minimise and Minimize (same function but for British English or American English.)
-5) Multiply tree pairs based off of same alphabet.
-6) Invert an element.
-7) Detect if the element is in F, T, or V.
-8) Initialise (trivial permutation elt) from a list of expansions in D/R
-9) Initialise from DFS notation representation string: e.g. "{11000,10100,1 2 0}"" (an elt of T)
-10) Initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
-11) Return domain/range permutations (natural permutation from prefix code in
-	dictionary order to the numeric labels of leaves)
-
+ 1. Expand both trees at corresponding location in domain or range.
+ 2. Permute domain or range permutation
+ 3. ResetLabels sets the
+    domain tree labels as 0 1 ... k-1 corresponding to its dictionary order and
+    modifies range tree so the initial prefix map is unchanged.
+ 4. Minimise and Minimize (same function but for British English or American English.)
+ 5. Multiply tree pairs based off of same alphabet.
+ 6. Invert an element.
+ 7. Detect if the element is in F, T, or V.
+ 8. Initialise (trivial permutation elt) from a list of expansions in D/R
+ 9. Initialise from DFS notation representation string: e.g. "{11000,10100,1 2 0}"" (an elt of T)
+ 10. Initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
+ 11. Return domain/range permutations (natural permutation from prefix code in
+    dictionary order to the numeric labels of leaves)
 */
 type TreePair interface {
 	Alphabet() []rune
@@ -69,8 +68,8 @@ type treePair struct {
 	ran      prefcode.PrefCode
 }
 
-// NewTreePairAlpha returns a prefixCode as a PrefCode and sets alphabet of runes by input string.
-func NewTreePairAlpha(alphaStr string) (TreePair, error) {
+// NewTreePairAlpha returns a treepair as a TreePair and sets alphabet of runes by input string.
+func NewTreePairAlpha(alphaStr string) (*treePair, error) {
 	dpc, errd := prefcode.NewPrefCodeAlphaString(alphaStr)
 	rpc, errr := prefcode.NewPrefCodeAlphaString(alphaStr)
 	if nil != errd {
@@ -83,10 +82,9 @@ func NewTreePairAlpha(alphaStr string) (TreePair, error) {
 		fmt.Println(outStr)
 		return nil, errr
 	}
-	var tp = treePair{alphabet: prefcode.StringToRuneSlice(alphaStr),
+	return &treePair{alphabet: prefcode.StringToRuneSlice(alphaStr),
 		dom: dpc,
-		ran: rpc}
-	return &tp, nil
+		ran: rpc}, nil
 }
 
 // EncodeDFS returns a treepair from an alphabet string (like "01") and a DFS string like
@@ -156,7 +154,7 @@ func EncodeDFS(tp TreePair, DFS string) bool {
 	return true
 }
 
-//returns a ptr to a copy of the alphabet runes.
+// returns a ptr to a copy of the alphabet runes.
 func (tp treePair) Alphabet() []rune {
 	retVal := tp.dom.Alphabet()
 	return retVal
@@ -200,7 +198,7 @@ func (tp treePair) PermuteLabels(perm map[int]int) bool {
 	return domSuccess && ranSuccess
 }
 
-// ResetLabels applies the same permutation to the labels of doamin and range tree
+// ResetLabels applies the same permutation to the labels of domain and range tree
 // so that the resulting permutation on domain tree corresponds to the natural
 // dictionary order on that prefix code.
 func (tp treePair) ResetLabels() bool {
@@ -384,7 +382,7 @@ func (tp treePair) ExpandDomainAt(s string) {
 	return
 }
 
-//ExpandRanAt expands the treepair if s is  a leaf or is deeper that the range tree code.
+// ExpandRanAt expands the treepair if s is  a leaf or is deeper that the range tree code.
 func (tp treePair) ExpandRangeAt(s string) {
 	tp.Invert()
 	tp.ExpandDomainAt(s)
@@ -393,18 +391,27 @@ func (tp treePair) ExpandRangeAt(s string) {
 }
 
 // Multiply returns a new TreePair that is the product of the two that are fed in.
-func Multiply(first, second TreePair) TreePair {
+func Multiply(first, second TreePair) *treePair {
 
+	fmt.Println("first: " + first.FullString())
+	fmt.Println("second: " + second.FullString())
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("Resetting labels:")
 	//build steady labelling
 	first.ResetLabels()
 	second.ResetLabels()
+	fmt.Println("first: " + first.FullString())
+	fmt.Println("second: " + second.FullString())
 
 	// Make a prefix code that is join of range of first element and domain of second element
 	fullCode, err := first.CodeRange().Join(second.CodeRange())
 	if nil != err {
 		panic("Multiply(): err return for join")
 	}
-
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("Join D-R code: " + fullCode.String())
 	// Get the exposed carets we can use to expand our two elements.
 	exposed := fullCode.ExposedCarets()
 
@@ -413,12 +420,30 @@ func Multiply(first, second TreePair) TreePair {
 		first.ExpandRangeAt(v)
 		second.ExpandDomainAt(v)
 	}
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+	fmt.Println("Expanded treepairs")
+	fmt.Println("first: " + first.FullString())
+	fmt.Println("second: " + second.FullString())
 
 	// align the permutation of domain of second element to the permutation on range of first element.
 	second.PermuteLabels(first.CodeRange().Permutation())
 
 	// return a new treepair with the correct domain, range, and permutation.
 	return &treePair{alphabet: first.Alphabet(), dom: first.CodeDomain(), ran: second.CodeRange()}
+}
+
+func Power(first TreePair, pow int) *treePair {
+	if pow == 0 {
+		// return the identity in a way that multiplies easily with previous
+		return &treePair{alphabet: first.Alphabet(), dom: first.CodeRange(), ran: first.CodeRange()}
+	}
+	if pow < 0 {
+		first.Invert()
+		pow *= -1
+	}
+	first.Minimise()
+	return Multiply(first, Power(first, pow-1))
 }
 
 // Minimise reduces a tree-pair.  Even if no reductions
@@ -448,7 +473,7 @@ func (tp treePair) Minimize() {
 func (tp treePair) SwapPermAtRangeKeys(a, b string) bool  { return true }
 func (tp treePair) SwapPermAtDomainKeys(a, b string) bool { return true }
 
-//NewTreePairDFS(s string)
+// NewTreePairDFS(s string)
 func (tp treePair) ExposedCarets() []string { return tp.dom.ExposedCarets() }
 func (tp treePair) Size() int               { return tp.dom.Size() }
 func (tp treePair) DFSString() string       { return "Stuff" }
@@ -482,4 +507,15 @@ func badSpeed(DFS string, cap int) (fast bool) {
 	fmt.Println("badSpeed(): Tree description by DFS cannot have too many `1`'s.")
 	return true
 
+}
+
+// Checks if A is less than or equal to B as tree-pairs.
+// Dictionary order on pair (size of domain tree, Full Description String)
+func LessEqual(tpA treePair, tpB treePair) bool {
+	if tpA.dom.Size() < tpB.dom.Size() {
+		return true
+	}
+	AString := tpA.FullString()
+	BString := tpB.FullString()
+	return AString <= BString
 }

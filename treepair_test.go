@@ -3,6 +3,8 @@ package treepair
 import (
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 /* PrefixCode can (23-05-2020), all tested:
@@ -230,7 +232,7 @@ func Test(t *testing.T) {
 	//TODO: fix this test.
 	t.Run("Multiply test", func(t *testing.T) {
 		//reduces element to minimal tree pair.
-		// makes permutation 1 2 3 ... 8
+		// makes permutation 0 1 2 3 ... 7
 		dTP, err := NewTreePairAlpha("01")
 		if nil != err {
 			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in domaintp constructor in Multiply test.")
@@ -347,5 +349,26 @@ func Test(t *testing.T) {
 		got := strconv.FormatBool(tp.InV())
 		want := strconv.FormatBool(true)
 		assertCorrectMessage(t, got, want)
+	})
+
+	t.Run("LessEqual test", func(t *testing.T) {
+		dTP, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in domaintp constructor in Multiply test.")
+		}
+
+		rTP, err := NewTreePairAlpha("01")
+		if nil != err {
+			assertCorrectMessage(t, "Failed to NewTreePairAlpha('01')", " in rangetp constructor in Multiply test.")
+		}
+
+		EncodeDFS(dTP, "{11001101000,11101000100,5 1 2 4 0 3}")
+		EncodeDFS(rTP, "{11110000111010000,11101000110100100,0 1 2 5 4 3 6 8 7}")
+
+		assert.True(t, LessEqual(*dTP, *rTP), "dTp <= rTP failed to be true.")
+
+		assert.True(t, LessEqual(*dTP, *dTP), "dTP <= dTP failed to be true.")
+
+		assert.False(t, LessEqual(*rTP, *dTP), "rTP was not greater than dTP")
 	})
 }

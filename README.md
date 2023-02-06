@@ -28,3 +28,4 @@ Can:
 9) Initialise from Full representation string: e.g. "D: [00 0], [01 1], [1 2], R: [0 1], [10 2], [11 0]"
 10) Return domain/range permutations (natural permutation from prefix code in
 	dictionary order to the numeric labels of leaves)
+11) isLessEqual(tp A, tp B) returns true if A <= B.  Comparison is dictionary: number leaves, followed by direct string comparison of fullRepString.
