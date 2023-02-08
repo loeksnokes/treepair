@@ -391,10 +391,7 @@ func (tp treePair) ExpandRangeAt(s string) {
 }
 
 // Multiply returns a new TreePair that is the product of the two that are fed in.
-func Multiply(nonLocalFirst, nonLocalSecond TreePair) *treePair {
-
-	first := treePair{alphabet: nonLocalFirst.Alphabet(), dom: nonLocalFirst.CodeDomain(), ran: nonLocalFirst.CodeRange()}
-	second := treePair{alphabet: nonLocalSecond.Alphabet(), dom: nonLocalSecond.CodeDomain(), ran: nonLocalSecond.CodeRange()}
+func Multiply(first, second TreePair) *treePair {
 
 	fmt.Println("first: " + first.FullString())
 	fmt.Println("second: " + second.FullString())
@@ -444,9 +441,13 @@ func Multiply(nonLocalFirst, nonLocalSecond TreePair) *treePair {
 	// align the permutation of domain of second element to the permutation on range of first element.
 	second.PermuteLabels(first.CodeRange().Permutation())
 
+	answer:=treePair{alphabet: first.Alphabet(), dom: first.CodeDomain(), ran: second.CodeRange()}
+
+	first.Minimise()
+	second.Minimise()
+
 	// return a new treepair with the correct domain, range, and permutation.
-	return &treePair{alphabet: first.Alphabet(), dom: first.CodeDomain(), ran: second.CodeRange()}
-}
+	return &answer
 
 func Power(first TreePair, pow int) *treePair {
 	if pow == 0 {
