@@ -418,20 +418,6 @@ func Multiply(first, second TreePair) *treePair {
 		second.ExpandDomainAt(key)
 	}
 
-	/*
-		// This commented out code tries to be efficient by only adding the exposed carets but it
-		// does not seem to wrok properly.
-		// Get the exposed carets we can use to expand our two elements.
-
-
-			exposed := fullCode.ExposedCarets()
-
-			// Expand first and second so range of first = domain of second = join we found.
-			for _, v := range exposed {
-				first.ExpandRangeAt(v)
-				second.ExpandDomainAt(v)
-			}*/
-
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 	fmt.Println("Expanded treepairs")
